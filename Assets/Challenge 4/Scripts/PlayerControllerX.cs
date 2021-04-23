@@ -12,6 +12,8 @@ public class PlayerControllerX : MonoBehaviour
     public GameObject powerupIndicator;
     public int powerUpDuration = 5;
 
+    public int boostTime = 1;
+
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
 
@@ -27,11 +29,20 @@ public class PlayerControllerX : MonoBehaviour
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
+        if(Input.GetButtonDown("Jump")){
+            speed = speed * 4;
+            CancelInvoke("UnsetBoost");
+            Invoke("UnsetBoost", boostTime);
+        }
         playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
         
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
+    }
+
+    void UnsetBoost(){
+        speed = 500;
     }
 
     // If Player collides with powerup, activate powerup
