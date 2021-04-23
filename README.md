@@ -33,4 +33,4 @@ Now you should be able to open up the project without any errors 🚀
 
 [Source](https://medium.com/@siqueiragleidson/unity-failed-to-load-windows-layout-when-start-a-new-project-b142f31c632a)
 
-BTW this error gets caused due to the _UserSettings_ folder (now deleted) which got introduced in Unity 2020. Be sure when publishing to GitHub you have the newest [`.gitignore`](https://github.com/github/gitignore/blob/master/Unity.gitignore) which also excludes the _UserSettings_ folder.
+BTW this error gets caused due to the _UserSettings_ folder (now deleted in this repo) which got introduced in Unity 2020. Be sure when publishing to GitHub you have the newest [`.gitignore`](https://github.com/github/gitignore/blob/master/Unity.gitignore) which also excludes the _UserSettings_ folder.
