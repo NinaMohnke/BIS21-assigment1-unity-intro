@@ -20,7 +20,7 @@ public class SpawnManagerX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        enemyCount = GameObject.FindGameObjectsWithTag("Powerup").Length;
+        enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
         if (enemyCount == 0)
         {
@@ -48,9 +48,16 @@ public class SpawnManagerX : MonoBehaviour
             Instantiate(powerupPrefab, GenerateSpawnPosition() + powerupSpawnOffset, powerupPrefab.transform.rotation);
         }
 
+        if (enemiesToSpawn == 1) {
+            enemyPrefab.GetComponent<EnemyX>().speed = 10;
+        } else {
+            enemyPrefab.GetComponent<EnemyX>().speed = enemyPrefab.GetComponent<EnemyX>().speed + 10;
+        }
+        
         // Spawn number of enemy balls based on wave number
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < enemiesToSpawn; i++)
         {
+            
             Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
         }
 
