@@ -31,7 +31,16 @@ public class PlayerControllerX : MonoBehaviour
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
-
+        
+        // Set boost particle position to player position
+        boostParticles.transform.position = transform.position;
+        
+        // Handle player boost
+        if(Input.GetButtonDown("Boost"))
+        {
+            playerRb.AddForce(focalPoint.transform.forward * speed);
+            boostParticles.Play();
+        }
     }
 
     // If Player collides with powerup, activate powerup
