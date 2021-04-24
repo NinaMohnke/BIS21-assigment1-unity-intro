@@ -5,7 +5,11 @@ using UnityEngine;
 public class SpawnManagerX : MonoBehaviour
 {
     public GameObject enemyPrefab;
+
+    public GameObject evilEnemyPrefab;
+    int countEvilEnemy = 0;
     public GameObject powerupPrefab;
+
 
     private float spawnRangeX = 10;
     private float spawnZMin = 15; // set min spawn Z
@@ -21,8 +25,9 @@ public class SpawnManagerX : MonoBehaviour
     void Update()
     {
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        enemyCount += GameObject.FindGameObjectsWithTag("EvilEnemy").Length;
 
-        if (enemyCount == 0)
+        if ((enemyCount - countEvilEnemy) == 0)
         {
             SpawnEnemyWave(waveCount);
         }
@@ -51,12 +56,21 @@ public class SpawnManagerX : MonoBehaviour
         // Spawn number of enemy balls based on wave number
         for (int i = 0; i < waveCount; i++)
         {
-            GameObject enemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
-            enemy.GetComponent().speed = 10 + waveCount;
+            GameObject enemeny = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            enemeny.GetComponent<EnemyX>().speed = 10 + waveCount;
+            //enemy.GetComponent().speed = 10 + waveCount;
+            //GameObject enemy =
+            if (Random.Range(0, 3) == 1) // chance of 0.25 to get an evil enemy 
+            {
+                Instantiate(evilEnemyPrefab, GenerateSpawnPosition(), evilEnemyPrefab.transform.rotation);
+                countEvilEnemy++;
+            }
         }
 
+
+
         waveCount++;
-        ResetPlayerPosition(); ,// put player back at start
+        //ResetPlayerPosition(); // put player back at start
 
     }
 

@@ -8,6 +8,8 @@ TagManager:
   - Powerup
   - PlayerGoal
   - Smoke
+  - EvilEnemy
+  - ground
   layers:
   - Default
   - TransparentFX

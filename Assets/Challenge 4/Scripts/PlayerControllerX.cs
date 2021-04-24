@@ -39,11 +39,16 @@ public class PlayerControllerX : MonoBehaviour
         if (Input.GetButtonDown("Boost"))
         {
 
-            boost_factor += 0.01f;
+            boost_factor += 0.05f;
             boostParticles.transform.position = transform.position + new Vector3(0, 0, -0.6f);
             boostParticles.Play();
             CancelInvoke("BoostCooldown"); // if we previously picked up an powerup
             Invoke("BoostCooldown", boost_time);
+        }
+
+        if (transform.position.y < -10)
+        {
+            ResetPlayerPosition();
         }
 
     }
@@ -73,11 +78,10 @@ public class PlayerControllerX : MonoBehaviour
     // If Player collides with enemy
     private void OnCollisionEnter(Collision other)
     {
+        Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
+        Vector3 awayFromPlayer = other.gameObject.transform.position - transform.position;
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer = other.gameObject.transform.position - transform.position;
-
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
                 enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
@@ -89,6 +93,29 @@ public class PlayerControllerX : MonoBehaviour
 
 
         }
+        else if (other.gameObject.CompareTag("EvilEnemy"))
+        {
+            if (hasPowerup) // if have powerup hit enemy with powerup force
+            {
+                enemyRigidbody.AddForce(awayFromPlayer * powerupStrength * 1.5f, ForceMode.Impulse);
+            }
+            else // if no powerup, hit enemy with normal strength 
+            {
+                enemyRigidbody.AddForce(awayFromPlayer * normalStrength * 0.5f, ForceMode.Impulse);
+            }
+        }
+        else if (!(other.gameObject.CompareTag("ground")))
+        {
+            playerRb.AddForce(awayFromPlayer * 0.5f, ForceMode.Impulse);
+        }
+
+    }
+    void ResetPlayerPosition()
+    {
+        transform.position = new Vector3(0, 1, -7);
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
     }
 
 
