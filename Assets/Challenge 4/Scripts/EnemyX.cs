@@ -18,6 +18,7 @@ public class EnemyX : MonoBehaviour
     void Update()
     {
         // Set enemy direction towards player goal and move there
+        playerGoal = GameObject.Find("Player Goal");
         Vector3 lookDirection = (playerGoal.transform.position - transform.position).normalized;
         enemyRb.AddForce(lookDirection * speed * Time.deltaTime);
 
