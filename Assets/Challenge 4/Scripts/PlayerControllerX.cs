@@ -6,6 +6,7 @@ public class PlayerControllerX : MonoBehaviour
 {
     private Rigidbody playerRb;
     private float speed = 500;
+    private float boostFactor = 50;
     private GameObject focalPoint;
 
     public bool hasPowerup;
@@ -26,8 +27,19 @@ public class PlayerControllerX : MonoBehaviour
     void Update()
     {
         // Add force to player in direction of the focal point (and camera)
+        //bool boostInput = Input.GetButtonDown("Boost");
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+
+        if(Input.GetKeyDown("space")) // Check if spacebar is being pressed
+        {
+            playerRb.AddForce(focalPoint.transform.forward * verticalInput * boostFactor * speed * Time.deltaTime); 
+            boostParticles.Play();
+        }
+
+        else
+        {
+            playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        }
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
