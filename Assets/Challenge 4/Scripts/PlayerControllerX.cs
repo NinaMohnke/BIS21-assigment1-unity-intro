@@ -9,6 +9,8 @@ public class PlayerControllerX : MonoBehaviour
     private GameObject focalPoint;
 
     public bool hasPowerup;
+
+    public bool hasBoost;
     public GameObject powerupIndicator;
     public int powerUpDuration = 5;
 
@@ -27,7 +29,16 @@ public class PlayerControllerX : MonoBehaviour
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        float newspeed;
+        hasBoost = Input.GetButton("Jump");
+
+        if (hasBoost){
+            newspeed = speed*2;  
+        } else {
+            newspeed = speed;
+        }
+        playerRb.AddForce(focalPoint.transform.forward * verticalInput * newspeed * Time.deltaTime);
+        
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
@@ -41,14 +52,16 @@ public class PlayerControllerX : MonoBehaviour
         {
             Destroy(other.gameObject);
             hasPowerup = true;
-            powerupIndicator.SetActive(true);
+            powerupIndicator.gameObject.SetActive(true);
+            CancelInvoke("PowerupCooldown");
+            Invoke("PowerupCooldown", powerUpDuration);
         }
     }
 
     void PowerupCooldown()
     {
         hasPowerup = false;
-        powerupIndicator.SetActive(false);
+        powerupIndicator.gameObject.SetActive(false);
     }
 
     // If Player collides with enemy
@@ -57,15 +70,15 @@ public class PlayerControllerX : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  transform.position - other.gameObject.transform.position; 
+            Vector3 awayFromPlayer = -transform.position + other.transform.position;
            
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
-                enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+                enemyRigidbody.AddForce(awayFromPlayer.normalized * powerupStrength, ForceMode.Impulse);
             }
             else // if no powerup, hit enemy with normal strength 
             {
-                enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
+                enemyRigidbody.AddForce(awayFromPlayer.normalized * normalStrength, ForceMode.Impulse);
             }
 
 
