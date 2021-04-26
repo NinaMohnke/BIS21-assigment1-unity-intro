@@ -31,7 +31,6 @@ public class PlayerControllerX : MonoBehaviour
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
-
     }
 
     // If Player collides with powerup, activate powerup
@@ -42,6 +41,8 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
             hasPowerup = true;
             powerupIndicator.SetActive(true);
+            CancelInvoke("PowerupCooldown");
+            Invoke("PowerupCooldown", powerUpDuration);
         }
     }
 
@@ -57,7 +58,7 @@ public class PlayerControllerX : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  transform.position - other.gameObject.transform.position; 
+            Vector3 awayFromPlayer =  other.gameObject.transform.position - transform.position; 
            
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
