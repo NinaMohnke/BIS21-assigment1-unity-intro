@@ -6,6 +6,7 @@ public class PlayerControllerX : MonoBehaviour
 {
     private Rigidbody playerRb;
     private float speed = 500;
+    private float boostSpeed = 10000;
     private GameObject focalPoint;
 
     public bool hasPowerup;
@@ -27,10 +28,21 @@ public class PlayerControllerX : MonoBehaviour
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime);
+        // Add force to player in direction of the focal point when boosting and play particles
+        boostParticles.transform.position = transform.position + new Vector3(0, 0.0f, 0); // Set Particle positionbeneath player
+        if (Input.GetButtonDown("Boost"))
+        {
+            playerRb.AddForce(focalPoint.transform.forward * boostSpeed * Time.deltaTime);
+            boostParticles.Play();
+        }
+        
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
+        
+
+
 
     }
 
@@ -42,6 +54,8 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
             hasPowerup = true;
             powerupIndicator.SetActive(true);
+            CancelInvoke("PowerupCooldown");
+            Invoke("PowerupCooldown", powerUpDuration);
         }
     }
 
@@ -57,7 +71,7 @@ public class PlayerControllerX : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  transform.position - other.gameObject.transform.position; 
+            Vector3 awayFromPlayer =   other.gameObject.transform.position - transform.position; 
            
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {

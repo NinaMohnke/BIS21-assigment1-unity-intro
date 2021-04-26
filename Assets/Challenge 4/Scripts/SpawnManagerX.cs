@@ -13,17 +13,26 @@ public class SpawnManagerX : MonoBehaviour
 
     public int enemyCount;
     public int waveCount = 1;
+    public int enemyGoals = 1;
 
 
-    public GameObject player; 
+    public int difficultyMultiplcator = 30;
+
+    public GameObject player;
+    private GameObject spawnedEnemy;
 
     // Update is called once per frame
     void Update()
     {
-        enemyCount = GameObject.FindGameObjectsWithTag("Powerup").Length;
+        enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
         if (enemyCount == 0)
         {
+           /* if(enemyGoals >= waveCount)
+            {
+                waveCount = 1;
+                enemyGoals = 1;
+            }*/
             SpawnEnemyWave(waveCount);
         }
 
@@ -48,10 +57,12 @@ public class SpawnManagerX : MonoBehaviour
             Instantiate(powerupPrefab, GenerateSpawnPosition() + powerupSpawnOffset, powerupPrefab.transform.rotation);
         }
 
+        
         // Spawn number of enemy balls based on wave number
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            spawnedEnemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            spawnedEnemy.GetComponent<EnemyX>().speed = +enemiesToSpawn * difficultyMultiplcator;
         }
 
         waveCount++;
