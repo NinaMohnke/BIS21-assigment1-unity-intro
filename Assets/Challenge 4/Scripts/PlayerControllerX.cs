@@ -16,6 +16,7 @@ public class PlayerControllerX : MonoBehaviour
     private float powerupStrength = 25; // how hard to hit enemy with powerup
 
     public ParticleSystem boostParticles;
+    public float boostSpeed = 20;
     
     void Start()
     {
@@ -25,6 +26,10 @@ public class PlayerControllerX : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetButtonDown("Boost")) {
+            playerRb.AddForce(focalPoint.transform.forward.normalized * boostSpeed, ForceMode.Impulse);
+            boostParticles.Play();
+        }
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
         playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
