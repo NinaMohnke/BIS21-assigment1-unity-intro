@@ -27,7 +27,8 @@ public class PlayerControllerX : MonoBehaviour
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        float boostInput = Input.GetAxis("Boost");
+        playerRb.AddForce((1 + boostInput) * focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
 
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
@@ -61,11 +62,11 @@ public class PlayerControllerX : MonoBehaviour
            
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
-                enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+                enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Force);
             }
             else // if no powerup, hit enemy with normal strength 
             {
-                enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
+                enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Force);
             }
 
 
